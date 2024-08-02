@@ -1,6 +1,3 @@
-#library(httr)
-#library(jsonlite) # if needing json format
-
 #' epi_image_dl
 #'
 #' Download images from an epicollect project
@@ -73,19 +70,5 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   # return dataframe
   return(ct1)
 }
-
-
-
-
-slug = "test-photo-api"
-form.ref = "ead5f161866447249c9c57b255dae5c7_66abc8fcd2c06"
-access = "public"
-cname = "photo"
-path = "examples/data/orig_imgs/"
-df_path = "examples/output/dataframes/leaf_images.csv"
-
-
-
-
 
 

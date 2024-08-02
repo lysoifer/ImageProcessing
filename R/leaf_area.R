@@ -1,5 +1,3 @@
-#library(pliman)
-#library(foreach)
 #' Leaf area
 #' Calculate leaf area using pliman package
 #'
