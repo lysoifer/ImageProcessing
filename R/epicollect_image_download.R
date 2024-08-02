@@ -60,7 +60,7 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   # download images
   for(i in 1:nrow(ct1)) {
     #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
-    url = ct1[i, which(grepl(cname, colnames(ct1)))]
+    url = ct1[i, which(grepl(cname, colnames(ct1)))][1,1]
     fname = strsplit(url, split = "=")[[1]][4]
     dest = paste0(path, fname)
     download.file(url, destfile = dest, mode = "wb")
@@ -77,6 +77,12 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
 
 
 
+slug = "test-photo-api"
+form.ref = "ead5f161866447249c9c57b255dae5c7_66abc8fcd2c06"
+access = "public"
+cname = "photo"
+path = "examples/data/orig_imgs/"
+df_path = "examples/output/dataframes/leaf_images.csv"
 
 
 
