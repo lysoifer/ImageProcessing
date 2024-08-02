@@ -15,7 +15,7 @@
 #' For more instructions on calculating leaf area, see pliman reference at https://tiagoolivoto.github.io/pliman/
 #'
 #' @export
-leaf_area = function(imgpath, bg_file, area, outdir, ...) {
+leaf_area = function(imgpath, bg_file, area, dir_processed, prefix, outdir, ...) {
   out = foreach::foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
     im_i = imgpath[i]
 

@@ -5,7 +5,7 @@
 \title{Leaf area
 Calculate leaf area using pliman package}
 \usage{
-leaf_area(imgpath, bg_file, area, outdir, ...)
+leaf_area(imgpath, bg_file, area, dir_processed, prefix, outdir, ...)
 }
 \arguments{
 \item{imgpath}{vector of file paths to images}
@@ -14,13 +14,13 @@ leaf_area(imgpath, bg_file, area, outdir, ...)
 
 \item{area}{area of reference square}
 
-\item{outdir}{filepath to save output dataframe}
-
-\item{...}{arguments supplied to analyze_objects() from pliman package}
-
 \item{dir_processed}{directory to save processed images}
 
 \item{prefix}{prefix of filenames for processed images}
+
+\item{outdir}{filepath to save output dataframe}
+
+\item{...}{arguments supplied to analyze_objects() from pliman package}
 }
 \description{
 Leaf area
