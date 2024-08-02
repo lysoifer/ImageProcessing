@@ -1,5 +1,5 @@
-library(pliman)
-library(foreach)
+#library(pliman)
+#library(foreach)
 #' Leaf area
 #' Calculate leaf area using pliman package
 #'
@@ -18,7 +18,7 @@ library(foreach)
 #'
 #' @export
 leaf_area = function(imgpath, bg_file, area, outdir, ...) {
-  out = foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
+  out = foreach::foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
     im_i = imgpath[i]
 
     # get image file name
@@ -27,7 +27,7 @@ leaf_area = function(imgpath, bg_file, area, outdir, ...) {
     im_name2 = strsplit(im_name, split = "\\.")[[1]][1]
 
     im = image_import(im_i)
-    count = analyze_objects(im, marker = "id", index = "NB",
+    count = pliman::analyze_objects(im, marker = "id", index = "NB",
                             watershed = F, background = bg_file,
                             save_image = T, dir_processed = dir_processed, prefix = paste0(im_name2, "_"), ...)
 
@@ -36,7 +36,7 @@ leaf_area = function(imgpath, bg_file, area, outdir, ...) {
     marker = count$results[which(round(asp_ratio, 1) == 1.0), "id"]
 
     # calculate area
-    calc = get_measures(count, id = marker, area ~ area)
+    calc = pliman::get_measures(count, id = marker, area ~ area)
     morpho = calc[,c("area", "perimeter", "length", "width", "asp_ratio")]
     morpho$img_name = im_name
     morpho

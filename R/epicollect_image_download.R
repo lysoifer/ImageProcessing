@@ -1,5 +1,5 @@
-library(httr)
-library(jsonlite) # if needing json format
+#library(httr)
+#library(jsonlite) # if needing json format
 
 #' epi_image_dl
 #'
@@ -25,21 +25,21 @@ library(jsonlite) # if needing json format
 #' @export
 epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA) {
   if(access == "private") {
-    res <- POST("https://five.epicollect.net/api/oauth/token",
+    res <- httr::POST("https://five.epicollect.net/api/oauth/token",
             body = list(grant_type = "client_credentials",
                         client_id = cID,
                         client_secret = secret))
-    http_status(res)
-    token <- content(res)$access_token
+    httr::http_status(res)
+    token <- httr::content(res)$access_token
   }
 
   url.form<- paste("https://five.epicollect.net/api/export/entries/", slug, "?map_index=0&form_ref=", form.ref, "&format=csv&headers=true", sep= "")
   #url.form<- paste("https://five.epicollect.net/api/export/entries/", proj.slug, "?map_index=0&form_ref=", form.ref, "&format=json", sep= "") ## if using json
 
   if(access == "private") {
-    res1<- GET(url.form, add_headers("Authorization" = paste("Bearer", token)))
+    res1<- httr::GET(url.form, add_headers("Authorization" = paste("Bearer", token)))
   } else {
-    res1<- GET(url.form)
+    res1<- httr::GET(url.form)
   }
 
   # ct1 is a dataframe of the data from epicollect
