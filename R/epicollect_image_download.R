@@ -12,6 +12,7 @@ library(jsonlite) # if needing json format
 #' @param secret secret if project is private
 #' @param cname name of column that photos are stored in
 #' @param path file directory to save images to
+#' @param df_path file path to save dataframe (must be .csv)
 #'
 #' @details
 #' Slug and form ref can be found in epicollect project details. Use the project slug and the form ref. Code adapted from https://gist.github.com/mirko77/3f4a101cd4a77e2ae3e760d44d18d901
@@ -22,7 +23,7 @@ library(jsonlite) # if needing json format
 #' epi_image_dl(slug = "test-photo-api", form.ref = "ead5f161866447249c9c57b255dae5c7_66abc8fcd2c06", access = "public", cname = "photo", path = "/path/to/photos/")
 #'
 #' @export
-epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path) {
+epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA) {
   if(access == "private") {
     res <- POST("https://five.epicollect.net/api/oauth/token",
             body = list(grant_type = "client_credentials",
@@ -46,6 +47,16 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   #ct1<- fromJSON(rawToChar(content(res1))) ## if using json
   #ct1 = ct1$data$entries ## if using json
 
+  # rename columns
+  nms = colnames(ct1)[5:ncol(ct1)]
+  nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
+
+  colnames(ct1)[5:ncol(ct1)] = nms
+
+  # add photo shortname to dataframe
+  photo_short = unlist(lapply(strsplit(ct1$photo, split = "="), "[[", 4))
+  ct1$photo_short = photo_short
+
   # download images
   for(i in 1:nrow(ct1)) {
     #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
@@ -54,4 +65,21 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
     dest = paste0(path, fname)
     download.file(url, destfile = dest, mode = "wb")
   }
+
+  if(!is.na(df_path)) {
+    write.csv(ct1, file = df_path)
+  }
+
+  # return dataframe
+  return(ct1)
 }
+
+
+
+
+
+
+
+
+
+

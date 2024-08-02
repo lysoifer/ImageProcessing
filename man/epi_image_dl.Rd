@@ -4,7 +4,16 @@
 \alias{epi_image_dl}
 \title{epi_image_dl}
 \usage{
-epi_image_dl(slug, form.ref, access, cID = NA, secret = NA, cname, path)
+epi_image_dl(
+  slug,
+  form.ref,
+  access,
+  cID = NA,
+  secret = NA,
+  cname,
+  path,
+  df_path = NA
+)
 }
 \arguments{
 \item{slug}{project slug}
@@ -20,6 +29,8 @@ epi_image_dl(slug, form.ref, access, cID = NA, secret = NA, cname, path)
 \item{cname}{name of column that photos are stored in}
 
 \item{path}{file directory to save images to}
+
+\item{df_path}{file path to save dataframe (must be .csv)}
 }
 \description{
 Download images from an epicollect project
