@@ -5,8 +5,7 @@
 #' @param bg_file file path to an image of the background behind leaves (see details in pliman package)
 #' @param area area of reference square
 #' @param dir_processed directory to save processed images
-#' @param prefix prefix of filenames for processed images
-#' @param outdir filepath to save output dataframe
+#' @param outdir if specified, filepath to save output dataframe
 #' @param ... arguments supplied to analyze_objects() from pliman package
 #'
 #' @details
@@ -15,7 +14,7 @@
 #' For more instructions on calculating leaf area, see pliman reference at https://tiagoolivoto.github.io/pliman/
 #'
 #' @export
-leaf_area = function(imgpath, bg_file, area, dir_processed, prefix, outdir, ...) {
+leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
   out = foreach::foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
     im_i = imgpath[i]
 
@@ -39,5 +38,10 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, prefix, outdir, ...)
     morpho$img_name = im_name
     morpho
   }
+
+  if(!is.na(outdir)) {
+    write.csv(out, file = outdir)
+  }
+
   return(out)
 }
