@@ -1,0 +1,12 @@
+Package: ImageProcessing
+Title: Process images
+Version: 0.0.0.9000
+Authors@R: 
+    person("Lydia", "Soifer", , "lysoifer@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Process images for ecological data.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
