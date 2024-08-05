@@ -49,10 +49,11 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
 
   colnames(ct1)[5:ncol(ct1)] = nms
+  ct1 = ct1 %>% filter(photo != "")
 
   # add photo shortname to dataframe
-  photo_short = unlist(lapply(strsplit(ct1$photo, split = "="), "[[", 4))
-  ct1$photo_short = photo_short
+  img_name = unlist(lapply(strsplit(ct1$photo, split = "="), "[[", 4))
+  ct1$img_name = img_name
 
   # download images
   for(i in 1:nrow(ct1)) {
@@ -70,5 +71,3 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   # return dataframe
   return(ct1)
 }
-
-

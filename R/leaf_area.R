@@ -15,7 +15,7 @@
 #'
 #' @export
 leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
-  out = foreach::foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
+  out = foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
     im_i = imgpath[i]
 
     # get image file name
