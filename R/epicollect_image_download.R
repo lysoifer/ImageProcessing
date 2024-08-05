@@ -52,16 +52,21 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   ct1 = ct1[ct1[,cname]!= "",]
 
   # add photo shortname to dataframe
-  img_name = unlist(lapply(strsplit(ct1[, cname], split = "="), "[[", 4))
-  ct1$img_name = img_name
+  ct1 = ct1 %>%
+    dplyr::rowwise() %>%
+    mutate(img_name = dplyr::case_when(!!as.symbol(cname) == "" ~ NA,
+                                       !!as.symbol(cname) != "" ~ strsplit(photo, split = "=")[[1]][4])) %>%
+    as.data.frame()
 
   # download images
   for(i in 1:nrow(ct1)) {
-    #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
-    url = ct1[i, which(grepl(cname, colnames(ct1)))]
-    fname = strsplit(url, split = "=")[[1]][4]
-    dest = paste0(path, fname)
-    download.file(url, destfile = dest, mode = "wb")
+    if(ct1[i,cname] != "") {
+          #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
+      url = ct1[i, which(grepl(cname, colnames(ct1)))]
+      fname = strsplit(url, split = "=")[[1]][4]
+      dest = paste0(path, fname)
+      download.file(url, destfile = dest, mode = "wb")
+    }
   }
 
   if(!is.na(df_path)) {
