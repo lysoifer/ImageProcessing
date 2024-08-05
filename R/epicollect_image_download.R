@@ -49,7 +49,6 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
 
   colnames(ct1)[5:ncol(ct1)] = nms
-  ct1 = ct1[ct1[,cname]!= "",]
 
   # add photo shortname to dataframe
   ct1 = ct1 %>%
