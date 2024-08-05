@@ -49,16 +49,16 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
 
   colnames(ct1)[5:ncol(ct1)] = nms
-  ct1 = ct1 %>% filter(photo != "")
+  ct1 = ct1 %>% filter(.data[[cname]] != "")
 
   # add photo shortname to dataframe
-  img_name = unlist(lapply(strsplit(ct1$photo, split = "="), "[[", 4))
+  img_name = unlist(lapply(strsplit(ct1[, cname], split = "="), "[[", 4))
   ct1$img_name = img_name
 
   # download images
   for(i in 1:nrow(ct1)) {
     #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
-    url = ct1[i, which(grepl(cname, colnames(ct1)))][1,1]
+    url = ct1[i, which(grepl(cname, colnames(ct1)))]
     fname = strsplit(url, split = "=")[[1]][4]
     dest = paste0(path, fname)
     download.file(url, destfile = dest, mode = "wb")
