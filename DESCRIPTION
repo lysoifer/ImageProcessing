@@ -16,4 +16,5 @@ Imports:
     doParallel,
     foreach,
     httr,
-    pliman
+    pliman,
+    dplyr
