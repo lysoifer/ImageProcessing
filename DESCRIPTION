@@ -17,4 +17,8 @@ Imports:
     foreach,
     httr,
     pliman,
-    dplyr
+    dplyr,
+    imageseg (>= 0.5),
+    keras (>= 2.15.0),
+    tensorflow (>= 2.16.0),
+    reticulate (>= 1.38.0)
