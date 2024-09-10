@@ -61,9 +61,9 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
 
   # download images
   for(i in 1:nrow(ct1)) {
-    if(ct1[i,cname] != "") {
+    if(ct1[i,col] != "") {
           #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
-      url = ct1[i, which(grepl(cname, colnames(ct1)))]
+      url = ct1[i, which(grepl(col, colnames(ct1)))]
       fname = strsplit(url, split = "=")[[1]][4]
       dest = paste0(path, fname)
       download.file(url, destfile = dest, mode = "wb")
