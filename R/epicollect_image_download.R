@@ -45,16 +45,18 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   #ct1 = ct1$data$entries ## if using json
 
   # rename columns
-  nms = colnames(ct1)[5:ncol(ct1)]
-  nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
+  # nms = colnames(ct1)[5:ncol(ct1)]
+  # nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
+  #
+  # colnames(ct1)[5:ncol(ct1)] = nms
 
-  colnames(ct1)[5:ncol(ct1)] = nms
+  col = grep(cname, colnames(ct1), value = T)
 
   # add photo shortname to dataframe
   ct1 = ct1 %>%
     dplyr::rowwise() %>%
     mutate(img_name = dplyr::case_when(!!as.symbol(cname) == "" ~ NA,
-                                       !!as.symbol(cname) != "" ~ strsplit(photo, split = "=")[[1]][4])) %>%
+                                       !!as.symbol(cname) != "" ~ strsplit(.data[[col]], split = "=")[[1]][4])) %>%
     as.data.frame()
 
   # download images
