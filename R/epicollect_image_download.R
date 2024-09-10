@@ -55,8 +55,8 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   # add photo shortname to dataframe
   ct1 = ct1 %>%
     dplyr::rowwise() %>%
-    mutate(img_name = dplyr::case_when(!!as.symbol(cname) == "" ~ NA,
-                                       !!as.symbol(cname) != "" ~ strsplit(.data[[col]], split = "=")[[1]][4])) %>%
+    mutate(img_name = dplyr::case_when(!!as.symbol(col) == "" ~ NA,
+                                       !!as.symbol(col) != "" ~ strsplit(.data[[col]], split = "=")[[1]][4])) %>%
     as.data.frame()
 
   # download images
