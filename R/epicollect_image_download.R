@@ -60,14 +60,13 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
     as.data.frame()
 
   # download images
-  fexist = list.files(path, pattern = ".jpg", full.names = T)
   for(i in 1:nrow(ct1)) {
     if(ct1[i,col] != "") {
           #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
       url = ct1[i, which(grepl(col, colnames(ct1)))]
       fname = strsplit(url, split = "=")[[1]][4]
       dest = paste0(path, fname)
-      if(!file.exists(f[i])) {
+      if(!file.exists(dest) {
         download.file(url, destfile = dest, mode = "wb")
       }
     }
