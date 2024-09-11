@@ -23,24 +23,32 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
     im_name = im_name[length(im_name)]
     im_name2 = strsplit(im_name, split = "\\.")[[1]][1]
 
-    im = image_import(im_i)
-    count = pliman::analyze_objects(im, marker = "id", index = "NB",
-                            watershed = F, background = bg_file,
-                            save_image = T, dir_processed = dir_processed, prefix = paste0(im_name2, "_"), ...)
+    # run area calculation if it has not been run previously
+    if(!file.exists(paste0(dir_processed, im_name2, "_img.png"))) {
+      im = image_import(im_i)
+      count = pliman::analyze_objects(im, marker = "id", index = "NB",
+                                      watershed = F, background = bg_file,
+                                      save_image = T, dir_processed = dir_processed, prefix = paste0(im_name2, "_"),
+                                      reference_smaller = T, reference_area = area, reference = F,
+                                      lower_noise = 0.1)
+      # can add threshold = "x" to manually choose threshold
 
-    # get reference square
-    asp_ratio = count$results$asp_ratio
-    marker = count$results[which(round(asp_ratio, 1) == 1.0), "id"]
-
-    # calculate area
-    calc = pliman::get_measures(count, id = marker, area ~ area)
-    morpho = calc[,c("area", "perimeter", "length", "width", "asp_ratio")]
-    morpho$img_name = im_name
-    morpho
+      marker = count$results[which(count$results$area == min(count$results$area)), "id"] # the smaller object is used as the reference object
+      # calculate area
+      calc = pliman::get_measures(count, id = marker, area ~ area)
+      morpho = data.frame(area = sum(calc$area))
+      morpho$img_name = im_name
+      morpho
+    }
   }
 
+  # append rows to existing dataframe
+  if(!is.na(outdir) & file.exists(outdir)) {
+    dat = read.csv(outdir)
+    out = rbind(dat, morpho)
+  }
   if(!is.na(outdir)) {
-    write.csv(out, file = outdir)
+    write.csv(out, file = outdir, row.names = F)
   }
 
   return(out)
