@@ -60,6 +60,7 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
     as.data.frame()
 
   # download images
+  f = list.files(path, pattern = ".jpg", full.names = T)
   for(i in 1:nrow(ct1)) {
     if(ct1[i,col] != "") {
           #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
