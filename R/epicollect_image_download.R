@@ -66,7 +66,7 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
       url = ct1[i, which(grepl(col, colnames(ct1)))]
       fname = strsplit(url, split = "=")[[1]][4]
       dest = paste0(path, fname)
-      if(!file.exists(dest) {
+      if(!file.exists(dest)) {
         download.file(url, destfile = dest, mode = "wb")
       }
     }
