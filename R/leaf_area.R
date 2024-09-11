@@ -9,9 +9,11 @@
 #' @param ... arguments supplied to analyze_objects() from pliman package
 #'
 #' @details
-#' Reference area must be a square. It is recommended that you follow instructions in pliman package to identify the best index for your analysis.
-#' The default used here is "NB". From testing, this appears to work well for a green leaf on a royal blue background with a white reference square.
+#' Reference area must be smaller than the leaf.
+#' It is recommended that you follow instructions in pliman package to identify the best index for your analysis.
+#' The default used here is "NB". From testing, this appears to work well for a green leaf on a royal blue background with a white reference object.
 #' For more instructions on calculating leaf area, see pliman reference at https://tiagoolivoto.github.io/pliman/
+#' The function will automatically append observations to an existing dataframe
 #'
 #' @export
 leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
