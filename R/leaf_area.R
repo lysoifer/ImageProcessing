@@ -17,6 +17,15 @@
 #'
 #' @export
 leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
+
+  # read in output file if it exists
+  if(file.exists(outdir)) {
+    dat = read.csv(outdir)
+  } else {
+    dat = data.frame(area = double(), img_name = character())
+  }
+
+
   out = foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
     im_i = imgpath[i]
 
@@ -40,15 +49,10 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
       calc = pliman::get_measures(count, id = marker, area ~ area)
       morpho = data.frame(area = sum(calc$area))
       morpho$img_name = im_name
-      morpho
+      dat = rbind(dat, morpho)
     }
   }
 
-  # append rows to existing dataframe
-  if(!is.na(outdir) & file.exists(outdir)) {
-    dat = read.csv(outdir)
-    out = rbind(dat, out)
-  }
   if(!is.na(outdir)) {
     write.csv(out, file = outdir, row.names = F)
   }
