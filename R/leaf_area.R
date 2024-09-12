@@ -26,7 +26,7 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
   }
 
 
-  out = foreach(i = 1:length(imgpath), .combine = "rbind") %do% {
+  for(i in 1:length(imgpath)) {
     im_i = imgpath[i]
 
     # get image file name
@@ -54,8 +54,8 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
   }
 
   if(!is.na(outdir)) {
-    write.csv(out, file = outdir, row.names = F)
+    write.csv(dat, file = outdir, row.names = F)
   }
 
-  return(out)
+  return(dat)
 }
