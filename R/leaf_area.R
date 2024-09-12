@@ -47,7 +47,7 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
   # append rows to existing dataframe
   if(!is.na(outdir) & file.exists(outdir)) {
     dat = read.csv(outdir)
-    out = rbind(dat, morpho)
+    out = rbind(dat, out)
   }
   if(!is.na(outdir)) {
     write.csv(out, file = outdir, row.names = F)
