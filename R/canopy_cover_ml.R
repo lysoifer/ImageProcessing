@@ -38,8 +38,10 @@ canopy_cover_ml = function(imageDir, outDir_resized, outDir_binary, canopy_model
   fnames = sapply(fnames, "[[", length(fnames[[1]]))
   fnames = substr(fnames, 1, nchar(fnames)-4)
   for(i in 1:nrow(results$summary)) {
-    img_result = image_append(c(results$image[i], results$prediction_binary[i]))
-    image_write(img_result, paste0(outDir_binary, fnames[i], ".png"))
+    # img_result = image_append(c(results$image[i], results$prediction_binary[i]))
+    # image_write(img_result, paste0(outDir_binary, fnames[i], ".png"))
+    image_write(results$prediction_binary[i], paste0(outDir_binary, fnames[i], ".png"))
+
   }
 
   results$summary$img_name = fnames
