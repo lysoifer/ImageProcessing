@@ -45,9 +45,9 @@ canopy_cover_ml = function(imageDir, outDir_resized, outDir_binary, canopy_model
   }
 
   results$summary$img_name = fnames
-  colnames(results)[9:10] = c("predicted_veg", "predicted_sky")
+  colnames(results$summary)[9:10] = c("predicted_veg", "predicted_sky")
 
-  return(results)
+  return(results$summary)
 }
 
 #imageDir = "examples/data/orig_imgs/"
