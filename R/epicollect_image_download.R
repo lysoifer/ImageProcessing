@@ -50,7 +50,7 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
   #
   # colnames(ct1)[5:ncol(ct1)] = nms
 
-  col = grep(cname, colnames(ct1), value = T)
+  col = grep(paste0(cname, "$"), colnames(ct1), value = T)
 
   # add photo shortname to dataframe
   ct1 = ct1 %>%
