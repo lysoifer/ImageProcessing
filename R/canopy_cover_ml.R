@@ -21,9 +21,9 @@ canopy_cover_ml = function(imageDir, outDir_resized, outDir_binary, canopy_model
 
   resizeImages(imageDir = imageDir,
                type = "canopy",
-               outDir = outDir)
+               outDir = outDir_resized)
 
-  images = loadImages(imageDir = outDir)
+  images = loadImages(imageDir = outDir_resized)
 
   # convert images to arrays for keras
   x = imagesToKerasInput(images)
@@ -34,9 +34,10 @@ canopy_cover_ml = function(imageDir, outDir_resized, outDir_binary, canopy_model
 
   results = imageSegmentation(model = model, x = x)
 
-  fnames = sapply(strsplit(results$summary[,1], split = "/"), "[[", 4)
-  fnames = substr(fnames, 1, nchar(fname)-4)
-  for(i in 1:nrow) {
+  fnames = strsplit(results$summary[,1], split = "/")
+  fnames = sapply(fnames, "[[", length(fnames[[1]]))
+  fnames = substr(fnames, 1, nchar(fnames)-4)
+  for(i in 1:nrow(results$summary)) {
     img_result = image_append(c(results$image[i], results$prediction_binary[i]))
     image_write(img_result, paste0(outDir_binary, fnames[i], ".png"))
   }
