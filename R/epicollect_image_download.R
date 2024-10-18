@@ -10,45 +10,53 @@
 #' @param cname name of column that photos are stored in
 #' @param path file directory to save images to
 #' @param df_path file path to save dataframe (must be .csv)
+#' @param from_csv logical; should downloads be from a dataframe
+#' @param form dataframe downloaded from epicollect
 #'
 #' @details
 #' Slug and form ref can be found in epicollect project details. Use the project slug and the form ref. Code adapted from https://gist.github.com/mirko77/3f4a101cd4a77e2ae3e760d44d18d901
-#'
+#' If from_csv = T, downloads are from a dataframe. If from_csv = FALSE, the function only downloads the first 50 entries - Need to fix this
 #' @keywords epicollect, download
 #'
 #' @examples
 #' epi_image_dl(slug = "test-photo-api", form.ref = "ead5f161866447249c9c57b255dae5c7_66abc8fcd2c06", access = "public", cname = "photo", path = "/path/to/photos/")
 #'
 #' @export
-epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA) {
-  if(access == "private") {
-    res <- httr::POST("https://five.epicollect.net/api/oauth/token",
-            body = list(grant_type = "client_credentials",
-                        client_id = cID,
-                        client_secret = secret))
-    httr::http_status(res)
-    token <- httr::content(res)$access_token
-  }
+epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA, from_csv = T, form) {
 
-  url.form<- paste("https://five.epicollect.net/api/export/entries/", slug, "?map_index=0&form_ref=", form.ref, "&format=csv&headers=true", sep= "")
-  #url.form<- paste("https://five.epicollect.net/api/export/entries/", proj.slug, "?map_index=0&form_ref=", form.ref, "&format=json", sep= "") ## if using json
+  if(!from_csv) {
+    if(access == "private") {
+      res <- httr::POST("https://five.epicollect.net/api/oauth/token",
+                        body = list(grant_type = "client_credentials",
+                                    client_id = cID,
+                                    client_secret = secret))
+      httr::http_status(res)
+      token <- httr::content(res)$access_token
+      }
 
-  if(access == "private") {
-    res1<- httr::GET(url.form, add_headers("Authorization" = paste("Bearer", token)))
+      url.form<- paste("https://five.epicollect.net/api/export/entries/", slug, "?map_index=0&form_ref=", form.ref, "&format=csv&headers=true", sep= "")
+      #url.form<- paste("https://five.epicollect.net/api/export/entries/", proj.slug, "?map_index=0&form_ref=", form.ref, "&format=json", sep= "") ## if using json
+
+      if(access == "private") {
+        res1<- httr::GET(url.form, add_headers("Authorization" = paste("Bearer", token)))
+      } else {
+        res1<- httr::GET(url.form)
+      }
+
+      # ct1 is a dataframe of the data from epicollect
+      ct1<- read.csv(res1$url)
+      #ct1<- fromJSON(rawToChar(content(res1))) ## if using json
+      #ct1 = ct1$data$entries ## if using json
+
+      # rename columns
+      # nms = colnames(ct1)[5:ncol(ct1)]
+      # nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
+      #
+      # colnames(ct1)[5:ncol(ct1)] = nms
+
   } else {
-    res1<- httr::GET(url.form)
+    ct1 = form
   }
-
-  # ct1 is a dataframe of the data from epicollect
-  ct1<- read.csv(res1$url)
-  #ct1<- fromJSON(rawToChar(content(res1))) ## if using json
-  #ct1 = ct1$data$entries ## if using json
-
-  # rename columns
-  # nms = colnames(ct1)[5:ncol(ct1)]
-  # nms = unlist(lapply(strsplit(nms, split = "_"), "[[", 2))
-  #
-  # colnames(ct1)[5:ncol(ct1)] = nms
 
   col = grep(paste0(cname, "$"), colnames(ct1), value = T)
 
