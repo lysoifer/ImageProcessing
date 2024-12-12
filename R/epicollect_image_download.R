@@ -12,6 +12,9 @@
 #' @param df_path file path to save dataframe (must be .csv)
 #' @param from_csv logical; should downloads be from a dataframe
 #' @param form dataframe downloaded from epicollect
+#' @param img_name character; how should the image be named once downloaded? "epi_imgname" assigns
+#' the image the name designated by epicollect in the downloaded csv. "epi_title" assigns the name of the
+#' title that epicollect gives the entry.
 #'
 #' @details
 #' Slug and form ref can be found in epicollect project details. Use the project slug and the form ref. Code adapted from https://gist.github.com/mirko77/3f4a101cd4a77e2ae3e760d44d18d901
@@ -22,7 +25,7 @@
 #' epi_image_dl(slug = "test-photo-api", form.ref = "ead5f161866447249c9c57b255dae5c7_66abc8fcd2c06", access = "public", cname = "photo", path = "/path/to/photos/")
 #'
 #' @export
-epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA, from_csv = T, form) {
+epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, path, df_path = NA, from_csv = T, form, img_name) {
 
   if(!from_csv) {
     if(access == "private") {
@@ -72,7 +75,14 @@ epi_image_dl = function(slug, form.ref, access, cID = NA, secret = NA, cname, pa
     if(ct1[i,col] != "") {
           #fname = strsplit(ct1[i, which(grepl(cname, colnames(ct1)))], split = "=")[[1]][4]
       url = ct1[i, which(grepl(col, colnames(ct1)))]
-      fname = strsplit(url, split = "=")[[1]][4]
+
+      if(img_name == "epi_imgname") {
+        fname = strsplit(url, split = "=")[[1]][4]
+      }
+      if(img_name == "epi_title") {
+        fname = paste0(ct1[i, "title"], ".jpg")
+      }
+
       dest = paste0(path, fname)
       if(!file.exists(dest)) {
         download.file(url, destfile = dest, mode = "wb")
