@@ -35,20 +35,36 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
     im_name2 = strsplit(im_name, split = "\\.")[[1]][1]
 
     # run area calculation if it has not been run previously
-    if(!file.exists(paste0(dir_processed, im_name2, "_img.png"))) {
+    if (!file.exists(paste0(dir_processed, im_name2, "_img.png"))) {
       im = image_import(im_i)
-      count = pliman::analyze_objects(im, marker = "id", index = "NB",
-                                      watershed = F, background = bg_file,
-                                      save_image = T, dir_processed = dir_processed, prefix = paste0(im_name2, "_"),
-                                      reference_smaller = T, reference_area = area, reference = F,
-                                      lower_noise = 0.1)
-      # can add threshold = "x" to manually choose threshold
+      # initially use small lower noise for larger leaf pieces
+      count = pliman::analyze_objects(im, marker = "id",
+                                      index = "NB", watershed = F, background = bg_file,
+                                      save_image = T, dir_processed = dir_processed,
+                                      prefix = paste0(im_name2, "_"), reference_smaller = T,
+                                      reference_area = area, reference = F, lower_noise = 0.01,
+                                      marker_col = "red")
+      marker = count$results[which(count$results$eccentricity ==
+                                     min(count$results$eccentricity)), "id"]
+      calc = pliman::get_measures(count, id = marker,
+                                  area ~ area)
+      # if any area is less than 0.01, there was probably noise, so recalculate with larger lower noise threshold for smaller leaves
+      if(min(calc$area) < 0.05) {
+        count = pliman::analyze_objects(im, marker = "id",
+                                        index = "NB", watershed = F, background = bg_file,
+                                        save_image = T, dir_processed = dir_processed,
+                                        prefix = paste0(im_name2, "_"), reference_smaller = T,
+                                        reference_area = area, reference = F, lower_noise = 0.1,
+                                        marker_col = "red")
+        marker = count$results[which(count$results$eccentricity ==
+                                       min(count$results$eccentricity)), "id"]
+        calc = pliman::get_measures(count, id = marker,
+                                    area ~ area)
+      }
 
-      marker = count$results[which(count$results$area == min(count$results$area)), "id"] # the smaller object is used as the reference object
-      # calculate area
-      calc = pliman::get_measures(count, id = marker, area ~ area)
       morpho = data.frame(area = sum(calc$area))
       morpho$img_name = im_name
+      morpho$marker_id = marker
       dat = rbind(dat, morpho)
     }
   }
