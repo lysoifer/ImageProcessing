@@ -44,8 +44,8 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
                                       prefix = paste0(im_name2, "_"), reference_smaller = T,
                                       reference_area = area, reference = F, lower_noise = 0.01,
                                       marker_col = "red")
-      marker = count$results[which(count$results$eccentricity ==
-                                     min(count$results$eccentricity)), "id"]
+      marker = count$results[which(count$results$form_factor ==
+                                     max(count$results$form_factor)), "id"]
       calc = pliman::get_measures(count, id = marker,
                                   area ~ area)
       # if any area is less than 0.01, there was probably noise, so recalculate with larger lower noise threshold for smaller leaves
@@ -56,8 +56,8 @@ leaf_area = function(imgpath, bg_file, area, dir_processed, outdir = NA, ...) {
                                         prefix = paste0(im_name2, "_"), reference_smaller = T,
                                         reference_area = area, reference = F, lower_noise = 0.1,
                                         marker_col = "red")
-        marker = count$results[which(count$results$eccentricity ==
-                                       min(count$results$eccentricity)), "id"]
+        marker = count$results[which(count$results$form_factor ==
+                                       max(count$results$form_factor)), "id"]
         calc = pliman::get_measures(count, id = marker,
                                     area ~ area)
       }
